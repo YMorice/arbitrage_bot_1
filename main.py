@@ -11,7 +11,7 @@ symbols = ['BTC/USDT', 'ETH/USDT', 'XRP/USDT', 'BNB/USDT', 'SOL/USDT']
 async def main():
     for i in exchanges:
         getattr(ccxtpro, i)()
-            ticker = await exchange.watch_ticker('BTC/USDT')
-            print(ticker)
+        ticker = await exchange.watch_ticker('BTC/USDT')
+        print(ticker)
 
 asyncio.run(main())
