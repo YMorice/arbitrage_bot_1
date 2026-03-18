@@ -23,16 +23,26 @@ def main():
                 exchange2 = getattr(ccxtpro, j)()
                 ticker1 = await exchange.watch_ticker('BTC/USDT')
                 ticker2 = await exchange.watch_ticker('BTC/USDT')
+
+
                 spread = 0
+
+                
                 if ticker1['last'] >= ticker2['last']:
                     spread = ticker1['last'] - ticker2['last']
                     POURCENTAGE_SPREAD = spread*100/ticker1['last']
-                    if MIN_POURCENTAGE_SPREAD < POURCENTAGE_SPREAD :
-                        
                 else :
                     spread = ticker2['last'] - ticker1['last']
-                    spread*100/ticker2['last']
+                    spread = ticker1['last'] - ticker2['last']
+                    POURCENTAGE_SPREAD = spread*100/ticker2['last']
 
+
+                if MIN_POURCENTAGE_SPREAD < POURCENTAGE_SPREAD :
+                        STARTING_MONEY+=spread
+                        STARTING_MONEY
 
         except Exception as e:
             log.error(f"Unexpected error in main loop: {e}", exc_info=True)
+
+
+            
