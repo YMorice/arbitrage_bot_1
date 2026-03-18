@@ -1,9 +1,5 @@
 import asyncio
 import ccxt.pro as ccxtpro
-import logging
-
-log = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
 exchanges = ['binance', 'coinbase', 'kraken']
 symbols = ['BTC/USDT', 'ETH/USDT', 'XRP/USDT', 'BNB/USDT', 'SOL/USDT']
@@ -32,13 +28,13 @@ async def main():
                         percentage_spread = spread / reference_price
 
                         if percentage_spread > MIN_POURCENTAGE_SPREAD:
-                            fee = reference_price * 0.0025 * 2  # fee on both sides
+                            fee = reference_price * 0.0025 * 2
                             profit = spread - fee
                             STARTING_MONEY += profit
-                            log.info(f"{i} vs {j} | spread: {percentage_spread:.4%} | profit: {profit:.2f} | capital: {STARTING_MONEY:.2f}")
+                            print(f"{i} vs {j} | spread: {percentage_spread:.4%} | profit: {profit:.2f} | capital: {STARTING_MONEY:.2f}")
 
                     except Exception as e:
-                        log.error(f"Error on {i} vs {j}: {e}", exc_info=True)
+                        print(f"Error on {i} vs {j}: {e}")
     finally:
         for exchange in instances.values():
             await exchange.close()
