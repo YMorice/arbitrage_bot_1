@@ -8,7 +8,7 @@ EXCHANGES = {
 }
 
 MIN_POURCENTAGE_SPREAD = 0.005
-STARTING_MONEY = 200_000
+STARTING_MONEY = 200000
 prices = {}
 
 async def watch_exchange(name, symbol):
