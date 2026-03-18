@@ -1,43 +1,70 @@
 import asyncio
 import ccxt.pro as ccxtpro
 
-exchanges = ['binance', 'coinbase', 'kraken']
-symbols = ['BTC/USDT', 'ETH/USDT', 'XRP/USDT', 'BNB/USDT', 'SOL/USDT']
+EXCHANGES = {
+    'bybit':    'BTC/USDT',
+    'coinbase': 'BTC/USD',
+    'kraken':   'BTC/USDT',
+}
 
-POURCENTAGE_OF_ERROR = 0.02
 MIN_POURCENTAGE_SPREAD = 0.005
-STARTING_MONEY = 200000
+STARTING_MONEY = 200_000
+prices = {}
 
-async def main():
-    instances = {name: getattr(ccxtpro, name)() for name in exchanges}
+async def watch_exchange(name, symbol):
+    exchange = getattr(ccxtpro, name)({
+        'enableRateLimit': True,
+        'timeout': 30_000,
+    })
+    retry_delay = 1
     try:
         while True:
-            for i in exchanges:
-                for j in exchanges:
-                    if i == j:
-                        continue
-                    try:
-                        ticker1 = await instances[i].watch_ticker('BTC/USDT')
-                        ticker2 = await instances[j].watch_ticker('BTC/USDT')
-
-                        price1 = ticker1['last']
-                        price2 = ticker2['last']
-
-                        spread = abs(price1 - price2)
-                        reference_price = max(price1, price2)
-                        percentage_spread = spread / reference_price
-
-                        if percentage_spread > MIN_POURCENTAGE_SPREAD:
-                            fee = reference_price * 0.0025 * 2
-                            profit = spread - fee
-                            STARTING_MONEY += profit
-                            print(f"{i} vs {j} | spread: {percentage_spread:.4%} | profit: {profit:.2f} | capital: {STARTING_MONEY:.2f}")
-
-                    except Exception as e:
-                        print(f"Error on {i} vs {j}: {e}")
+            try:
+                ticker = await exchange.watch_ticker(symbol)
+                prices[name] = ticker['last']
+                print(f"[{name}] {symbol} = {ticker['last']}")  # <-- debug
+                retry_delay = 1
+                check_arbitrage()
+            except ccxtpro.NetworkError as e:
+                print(f"Network error on {name}: {e} — retry in {retry_delay}s")
+                await asyncio.sleep(retry_delay)
+                retry_delay = min(retry_delay * 2, 60)
+            except Exception as e:
+                print(f"Error on {name}: {e}")
+                await asyncio.sleep(retry_delay)
+                retry_delay = min(retry_delay * 2, 60)
     finally:
-        for exchange in instances.values():
-            await exchange.close()
+        await exchange.close()
+
+def check_arbitrage():
+    if len(prices) < 2:
+        return
+    names = list(prices.keys())
+    for i in names:
+        for j in names:
+            if i == j:
+                continue
+            price_i = prices[i]
+            price_j = prices[j]
+            spread = abs(price_i - price_j)
+            reference_price = max(price_i, price_j)
+            percentage_spread = spread / reference_price
+            if percentage_spread > MIN_POURCENTAGE_SPREAD:
+                fee = reference_price * 0.0025 * 2
+                profit = spread - fee
+                print(
+                    f"ARBITRAGE {i} vs {j} | "
+                    f"spread: {percentage_spread:.4%} | "
+                    f"profit: {profit:.2f} | "
+                    f"capital: {STARTING_MONEY:.2f}"
+                )
+
+async def main():
+    tasks = [watch_exchange(name, symbol) for name, symbol in EXCHANGES.items()]
+    await asyncio.gather(*tasks)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Stopped.")
