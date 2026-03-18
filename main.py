@@ -17,32 +17,32 @@ STARTING_MONEY = 200000
 def main():
     while True:
         try : 
-        for i in exchanges:
-            for j in exchanges:
-                exchange1 = getattr(ccxtpro, i)()
-                exchange2 = getattr(ccxtpro, j)()
-                ticker1 = await exchange.watch_ticker('BTC/USDT')
-                ticker2 = await exchange.watch_ticker('BTC/USDT')
+            for i in exchanges:
+                for j in exchanges:
+                    exchange1 = getattr(ccxtpro, i)()
+                    exchange2 = getattr(ccxtpro, j)()
+                    ticker1 = await exchange.watch_ticker('BTC/USDT')
+                    ticker2 = await exchange.watch_ticker('BTC/USDT')
 
 
-                spread = 0
+                    spread = 0
 
-                
-                if ticker1['last'] >= ticker2['last']:
-                    spread = ticker1['last'] - ticker2['last']
-                    POURCENTAGE_SPREAD = spread*100/ticker1['last']
-                else :
-                    spread = ticker2['last'] - ticker1['last']
-                    spread = ticker1['last'] - ticker2['last']
-                    POURCENTAGE_SPREAD = spread*100/ticker2['last']
+                    
+                    if ticker1['last'] >= ticker2['last']:
+                        spread = ticker1['last'] - ticker2['last']
+                        POURCENTAGE_SPREAD = spread*100/ticker1['last']
+                    else :
+                        spread = ticker2['last'] - ticker1['last']
+                        POURCENTAGE_SPREAD = spread*100/ticker2['last']
 
 
-                if MIN_POURCENTAGE_SPREAD < POURCENTAGE_SPREAD :
-                        STARTING_MONEY+=spread
-                        STARTING_MONEY
+                    if MIN_POURCENTAGE_SPREAD < POURCENTAGE_SPREAD :
+                            STARTING_MONEY+=spread
+                            STARTING_MONEY-= ticker1['last']*0.0025
+
+                    print(f"{i} vs. {j} : {STARTING_MONEY}")
 
         except Exception as e:
             log.error(f"Unexpected error in main loop: {e}", exc_info=True)
 
 
-            
