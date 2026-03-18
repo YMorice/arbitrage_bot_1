@@ -21,8 +21,8 @@ def main():
                 for j in exchanges:
                     exchange1 = getattr(ccxtpro, i)()
                     exchange2 = getattr(ccxtpro, j)()
-                    ticker1 = await exchange.watch_ticker('BTC/USDT')
-                    ticker2 = await exchange.watch_ticker('BTC/USDT')
+                    ticker1 = exchange.watch_ticker('BTC/USDT')
+                    ticker2 = exchange.watch_ticker('BTC/USDT')
 
 
                     spread = 0
