@@ -45,4 +45,5 @@ def main():
         except Exception as e:
             log.error(f"Unexpected error in main loop: {e}", exc_info=True)
 
-
+if __name__ == "__main__":
+    main()
