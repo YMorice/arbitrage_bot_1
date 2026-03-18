@@ -1,6 +1,7 @@
 # Librairies Importation
 import asyncio
 import ccxt.pro as ccxtpro
+import logging
 
 # List of exchanges
 exchanges = ['binance', 'coinbase', 'kraken']
