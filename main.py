@@ -4,7 +4,7 @@ import ccxt.pro as ccxtpro
 # Coinbase utilise USD, pas USDT. BNB n'est pas listé sur Coinbase ni Kraken.
 EXCHANGE_SYMBOLS = {
     'bybit': [
-        'BTC/USD', 'ETH/USD', 'BNB/USD', 'XRP/USD', 'SOL/USD'
+        'BTC/USDT', 'ETH/USDT', 'BNB/USDT', 'XRP/USDT', 'SOL/USDT'
     ],
     'coinbase': [
         'BTC/USD',  'ETH/USD',                'XRP/USD',  'SOL/USD'
