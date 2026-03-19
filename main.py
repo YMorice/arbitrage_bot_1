@@ -4,13 +4,13 @@ import ccxt.pro as ccxtpro
 # Coinbase utilise USD, pas USDT. BNB n'est pas listé sur Coinbase ni Kraken.
 EXCHANGE_SYMBOLS = {
     'bybit': [
-        'BTC/USDT', 'ETH/USDT', 'BNB/USDT', 'XRP/USDT', 'SOL/USDT'
+        'BTC/USD', 'ETH/USD', 'BNB/USD', 'XRP/USD', 'SOL/USD'
     ],
     'coinbase': [
         'BTC/USD',  'ETH/USD',                'XRP/USD',  'SOL/USD'
     ],
     'kraken': [
-        'BTC/USDT', 'ETH/USDT',               'XRP/USDT', 'SOL/USDT'
+        'BTC/USD', 'ETH/USD',               'XRP/USD', 'SOL/USD'
     ],
 }
 
@@ -85,7 +85,7 @@ def check_arbitrage(base):
             reference_price = max(price_i, price_j)
             percentage_spread = spread / reference_price
             if percentage_spread > MIN_POURCENTAGE_SPREAD:
-                fee = reference_price * 0.0025 * 2
+                fee = reference_price * 0.001
                 profit = spread - fee
                 STARTING_MONEY += profit
                 print(
