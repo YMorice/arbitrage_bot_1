@@ -37,7 +37,7 @@ async def watch_exchange(exchange_name, symbols):
                 tasks = [watch_symbol(exchange, exchange_name, s) for s in symbols]
                 await asyncio.gather(*tasks)
             except ccxtpro.NetworkError as e:
-                print(f"Network error on {exchange_name}: {e} — retry in {retry_delay}s")
+                print(f"Network error on {exchange_name}: {e} - retry in {retry_delay}s")
                 await asyncio.sleep(retry_delay)
                 retry_delay = min(retry_delay * 2, 60)
             except Exception as e:
@@ -61,7 +61,7 @@ async def watch_symbol(exchange, exchange_name, symbol):
             retry_delay = 1
             check_arbitrage(base)
         except ccxtpro.NetworkError as e:
-            print(f"Network error on {exchange_name}/{symbol}: {e} — retry in {retry_delay}s")
+            print(f"Network error on {exchange_name}/{symbol}: {e} - retry in {retry_delay}s")
             await asyncio.sleep(retry_delay)
             retry_delay = min(retry_delay * 2, 60)
         except Exception as e:
