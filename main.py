@@ -57,7 +57,6 @@ async def watch_symbol(exchange, exchange_name, symbol):
             if base not in prices:
                 prices[base] = {}
             prices[base][exchange_name] = price
-            print(f"[{exchange_name}] {symbol} = {price}")
             retry_delay = 1
             check_arbitrage(base)
         except ccxtpro.NetworkError as e:
